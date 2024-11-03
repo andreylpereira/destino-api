@@ -14,19 +14,22 @@ public class Destino {
 	private String nome;
 	private String localizacao;
 	private String descricao;
+	private String tipo;
 	private double avaliacao;
-	private int numeroAvaliacoes;
+	private int quantidadeAvaliacoes;
 
 	public Destino() {
 	}
 
-	public Destino(Long id, String nome, String localizacao, String descricao, double avaliacao, int numeroAvaliacoes) {
+	public Destino(Long id, String nome, String localizacao, String descricao, String tipo, double avaliacao,
+			int quantidadeAvaliacoes) {
 		this.id = id;
 		this.nome = nome;
 		this.localizacao = localizacao;
 		this.descricao = descricao;
+		this.tipo = tipo;
 		this.avaliacao = avaliacao;
-		this.numeroAvaliacoes = numeroAvaliacoes;
+		this.quantidadeAvaliacoes = quantidadeAvaliacoes;
 	}
 
 	public Long getId() {
@@ -53,14 +56,6 @@ public class Destino {
 		this.localizacao = localizacao;
 	}
 
-	public double getAvaliacao() {
-		return avaliacao;
-	}
-
-	public void setAvaliacao(double avaliacao) {
-		this.avaliacao = avaliacao;
-	}
-
 	public String getDescricao() {
 		return descricao;
 	}
@@ -69,11 +64,28 @@ public class Destino {
 		this.descricao = descricao;
 	}
 
-	public int getNumeroAvaliacoes() {
-		return numeroAvaliacoes;
+	public String getTipo() {
+		return tipo;
 	}
 
-	public void setNumeroAvaliacoes(int numeroAvaliacoes) {
-		this.numeroAvaliacoes = numeroAvaliacoes;
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
 	}
+
+	public double getAvaliacao() {
+		return avaliacao;
+	}
+
+	public void setAvaliacao(double avaliacao) {
+		this.avaliacao = avaliacao;
+	}
+
+	public int getQuantidadeAvaliacoes() {
+		return quantidadeAvaliacoes;
+	}
+
+	public void setQuantidadeAvaliacoes(int quantidadeAvaliacoes) {
+		this.quantidadeAvaliacoes = quantidadeAvaliacoes;
+	}
+
 }
