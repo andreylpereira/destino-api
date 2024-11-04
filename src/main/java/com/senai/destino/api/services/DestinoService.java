@@ -21,13 +21,22 @@ public class DestinoService {
 	}
 
 	public ResponseEntity<Destino> cadastrar(Destino destino) {
-		Destino novoDestino = destinoRepository.save(destino);
-		return new ResponseEntity<>(novoDestino, HttpStatus.CREATED);
+		try {
+			Destino novoDestino = destinoRepository.save(destino);
+			return new ResponseEntity<>(novoDestino, HttpStatus.CREATED);
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
 	}
 
 	public ResponseEntity<List<Destino>> listarTodosDestinos() {
 		List<Destino> destinos = destinoRepository.findAll();
-		return new ResponseEntity<>(destinos, HttpStatus.OK);
+		if (!destinos.isEmpty()) {
+			return new ResponseEntity<>(destinos, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
 	}
 
 	public ResponseEntity<Destino> recuperarDestino(Long id) throws NotFoundException {
@@ -38,7 +47,7 @@ public class DestinoService {
 	public ResponseEntity<Destino> excluirDestino(Long id) throws NotFoundException {
 		Destino destino = destinoRepository.findById(id).orElseThrow(() -> new NotFoundException());
 		destinoRepository.delete(destino);
-		return new ResponseEntity<>(destino, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(destino, HttpStatus.OK);
 	}
 
 	public ResponseEntity<List<Destino>> listarTodosPorNomeLocalizacao(String nome, String localizacao) {
@@ -57,18 +66,23 @@ public class DestinoService {
 	}
 
 	public ResponseEntity<Destino> atualizarAvaliacao(double nota, Long id) throws NotFoundException {
-		Destino destino = destinoRepository.findById(id).orElseThrow(() -> new NotFoundException());
 
-		int quantidadeAvaliada = destino.getQuantidadeAvaliacoes() + 1;
-		double avaliacaoAtualizada = ((destino.getAvaliacao() * destino.getQuantidadeAvaliacoes()) + nota)
-				/ quantidadeAvaliada;
+		if ((nota >= 0.00 && nota <= 10.0) || (id >= 0)) {
+			Destino destino = destinoRepository.findById(id).orElseThrow(() -> new NotFoundException());
 
-		destino.setAvaliacao(avaliacaoAtualizada);
-		destino.setQuantidadeAvaliacoes(quantidadeAvaliada);
+			int quantidadeAvaliada = destino.getQuantidadeAvaliacoes() + 1;
+			double avaliacaoAtualizada = ((destino.getAvaliacao() * destino.getQuantidadeAvaliacoes()) + nota)
+					/ quantidadeAvaliada;
 
-		destinoRepository.save(destino);
+			destino.setAvaliacao(avaliacaoAtualizada);
+			destino.setQuantidadeAvaliacoes(quantidadeAvaliada);
 
-		return new ResponseEntity<>(destino, HttpStatus.OK);
+			destinoRepository.save(destino);
+
+			return new ResponseEntity<>(destino, HttpStatus.OK);
+
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 
 }

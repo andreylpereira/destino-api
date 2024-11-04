@@ -25,31 +25,32 @@ public class DestinoController {
 	@Autowired
 	private DestinoService destinoService;
 
-    @PostMapping("/")
-    public ResponseEntity<Destino> cadastrarDestino(@RequestBody Destino destino) {
-        return destinoService.cadastrar(destino);
-    }
-    
-    @GetMapping("/")
-    public ResponseEntity<List<Destino>> listarDestinos() {
-    	return destinoService.listarTodosDestinos();
-    }
-    
-    @GetMapping("/{id}")
-    public ResponseEntity<Destino> recuperarDestinoPorId(@PathVariable Long id) throws NotFoundException {
-    	return destinoService.recuperarDestino(id);
-    }
-    
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Destino> excluirDestinoPorId(@PathVariable Long id) throws NotFoundException {
-    	return destinoService.excluirDestino(id);
-    }
-    
-    @GetMapping("/pesquisar")
-    public ResponseEntity<List<Destino>> pesquisarPorNomeLocalizacao(@RequestParam(required = false) String nome, @RequestParam(required = false) String localizacao) {
-    	return destinoService.listarTodosPorNomeLocalizacao(nome, localizacao);
-    }
-    
+	@PostMapping("/")
+	public ResponseEntity<Destino> cadastrarDestino(@RequestBody Destino destino) {
+		return destinoService.cadastrar(destino);
+	}
+
+	@GetMapping("/")
+	public ResponseEntity<List<Destino>> listarDestinos() {
+		return destinoService.listarTodosDestinos();
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Destino> recuperarDestinoPorId(@PathVariable Long id) throws NotFoundException {
+		return destinoService.recuperarDestino(id);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Destino> excluirDestinoPorId(@PathVariable Long id) throws NotFoundException {
+		return destinoService.excluirDestino(id);
+	}
+
+	@GetMapping("/pesquisar")
+	public ResponseEntity<List<Destino>> pesquisarPorNomeLocalizacao(@RequestParam(required = false) String nome,
+			@RequestParam(required = false) String localizacao) {
+		return destinoService.listarTodosPorNomeLocalizacao(nome, localizacao);
+	}
+
 	@PatchMapping("/{id}/avaliacao")
 	public ResponseEntity<Destino> avaliarDestino(@RequestParam double nota, @PathVariable Long id)
 			throws NotFoundException {
