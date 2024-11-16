@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.senai.destino.api.dtos.DestinoDTO;
 import com.senai.destino.api.entities.Destino;
 import com.senai.destino.api.services.DestinoService;
 
@@ -26,13 +27,13 @@ public class DestinoController {
 	private DestinoService destinoService;
 
 	@PostMapping("/")
-	public ResponseEntity<Destino> cadastrarDestino(@RequestBody Destino destino) {
-		return destinoService.cadastrar(destino);
+	public ResponseEntity<Destino> cadastrarDestino(@RequestBody DestinoDTO destinoDTO) {
+		return destinoService.cadastrar(destinoDTO);
 	}
 
 	@GetMapping("/")
 	public ResponseEntity<List<Destino>> listarDestinos() {
-		return destinoService.listarTodosDestinos();
+		return destinoService.listarDestinos();
 	}
 
 	@GetMapping("/{id}")
@@ -46,9 +47,9 @@ public class DestinoController {
 	}
 
 	@GetMapping("/pesquisar")
-	public ResponseEntity<List<Destino>> pesquisarPorNomeLocalizacao(@RequestParam(required = false) String nome,
+	public ResponseEntity<List<Destino>> recuperarPorNomeLocalizacao(@RequestParam(required = false) String nome,
 			@RequestParam(required = false) String localizacao) {
-		return destinoService.listarTodosPorNomeLocalizacao(nome, localizacao);
+		return destinoService.listarDestinosPorNomeLocalizacao(nome, localizacao);
 	}
 
 	@PatchMapping("/{id}/avaliacao")

@@ -1,12 +1,15 @@
 package com.senai.destino.api.services;
 
 import java.util.List;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.senai.destino.api.dtos.DestinoDTO;
 import com.senai.destino.api.entities.Destino;
 import com.senai.destino.api.repositories.DestinoRepository;
 
@@ -20,8 +23,19 @@ public class DestinoService {
 		this.destinoRepository = destinoRepository;
 	}
 
-	public ResponseEntity<Destino> cadastrar(Destino destino) {
+	public ResponseEntity<Destino> cadastrar(DestinoDTO destinoDTO) {
+
+		boolean isBlank = (destinoDTO.getDescricao().isBlank() || destinoDTO.getLocalizacao().isBlank()
+				|| destinoDTO.getNome().isBlank() || destinoDTO.getTipo().isBlank());
+
+		if (isBlank) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+
 		try {
+			Destino destino = new Destino();
+			BeanUtils.copyProperties(destinoDTO, destino);
+
 			Destino novoDestino = destinoRepository.save(destino);
 			return new ResponseEntity<>(novoDestino, HttpStatus.CREATED);
 		} catch (Exception e) {
@@ -30,7 +44,7 @@ public class DestinoService {
 
 	}
 
-	public ResponseEntity<List<Destino>> listarTodosDestinos() {
+	public ResponseEntity<List<Destino>> listarDestinos() {
 		List<Destino> destinos = destinoRepository.findAll();
 		if (!destinos.isEmpty()) {
 			return new ResponseEntity<>(destinos, HttpStatus.OK);
@@ -50,14 +64,14 @@ public class DestinoService {
 		return new ResponseEntity<>(destino, HttpStatus.OK);
 	}
 
-	public ResponseEntity<List<Destino>> listarTodosPorNomeLocalizacao(String nome, String localizacao) {
+	public ResponseEntity<List<Destino>> listarDestinosPorNomeLocalizacao(String nome, String localizacao) {
 		List<Destino> destinos;
 
-		if (nome != null && !nome.isEmpty() && localizacao != null && !localizacao.isEmpty()) {
+		if (nome != null && !nome.isBlank() && localizacao != null && !localizacao.isBlank()) {
 			destinos = destinoRepository.findByNomeAndLocalizacao(nome, localizacao);
-		} else if (nome != null && !nome.isEmpty()) {
+		} else if (nome != null && !nome.isBlank()) {
 			destinos = destinoRepository.findByNome(nome);
-		} else if (localizacao != null && !localizacao.isEmpty()) {
+		} else if (localizacao != null && !localizacao.isBlank()) {
 			destinos = destinoRepository.findByLocalizacao(localizacao);
 		} else {
 			destinos = destinoRepository.findAll();
@@ -67,7 +81,9 @@ public class DestinoService {
 
 	public ResponseEntity<Destino> atualizarAvaliacao(double nota, Long id) throws NotFoundException {
 
-		if ((nota >= 0.00 && nota <= 10.0) || (id >= 0)) {
+		boolean isValid = (nota >= 0.00 && nota <= 10.0) && (id > 0);
+
+		if (isValid) {
 			Destino destino = destinoRepository.findById(id).orElseThrow(() -> new NotFoundException());
 
 			int quantidadeAvaliada = destino.getQuantidadeAvaliacoes() + 1;
